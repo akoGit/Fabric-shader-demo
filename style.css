@@ -18,6 +18,32 @@ body {
   height: 100vh;
 }
 
+.wrap_img {
+  z-index: 9;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  div {
+    color: #FFFFFF;
+    text-transform: uppercase;
+    font-family: system-ui;
+    font-size: .8rem;
+    font-weight: 100;
+    border: 1px dashed #C8CBCE;
+    padding: .5rem;
+  }
+
+  input {
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+  }
+}
+
 
 .time_wrapper {
   position: absolute;

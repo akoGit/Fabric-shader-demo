@@ -1,12 +1,14 @@
 import "../../style.css";
 import * as THREE from "three";
 import { Pane } from "tweakpane";
+// import * as TweakpaneImagePlugin from 'tweakpane-image-plugin';
 import vertex from "../shaders/vertex.glsl";
 import fragment from "../shaders/fragment.glsl";
 import tex1 from "../assets/tex.jpg"
 import tex2 from "../assets/dust.jpg"
 import tex3 from "../assets/dust2.jpg"
 // import { gsap } from 'gsap';
+
 
 export default class Fabric {
 	constructor() {
@@ -38,6 +40,32 @@ export default class Fabric {
 		this.render();
 		this.setUpResize();
 		this.animate()
+		this.setupImageUpload();
+	}
+
+
+	setupImageUpload() {
+		const fileInput = document.getElementById('img');
+		fileInput.addEventListener('change', (event) => {
+			const file = event.target.files[0];
+			if (file) {
+				const reader = new FileReader();
+				reader.onload = (e) => {
+					const image = new Image();
+					image.src = e.target.result;
+					image.onload = () => {
+						const texture = new THREE.Texture(image);
+						// texture.minFilter = THREE.NearestFilter;
+						// texture.magFilter = THREE.NearestFilter;
+						texture.wrapS = THREE.RepeatWrapping;
+						texture.wrapT = THREE.RepeatWrapping;
+						texture.needsUpdate = true;
+						this.material.uniforms.tex2.value = texture;
+					};
+				};
+				reader.readAsDataURL(file);
+			}
+		});
 	}
 
 	settings() {
@@ -51,8 +79,11 @@ export default class Fabric {
 			MOUSE_SIZE: 0.7,
 			SCALE: 1.0,
 			DUST_OPACITY: 1.0,
+			// image: new Image(),
 		};
 		const pane = new Pane();
+		// pane.registerPlugin(TweakpaneImagePlugin);
+
 		this.folder = pane.addFolder({
 			title: "Debug",
 			expanded: false
@@ -95,9 +126,21 @@ export default class Fabric {
 			min: 0.0,
 			max: 10.0
 		});
+
+
+		// this.folder.addBinding(params, 'image', {
+		// 	extensions: '.jpg, .gif',
+		// });
+
+
 	}
 
 	addObjects() {
+
+		// const corsImageModified = new Image();
+		// corsImageModified.crossOrigin = "Anonymous";
+		// corsImageModified.src = "";
+
 		const loader = new THREE.TextureLoader();
 		this.uniforms = {
 			time: { type: "f", value: 0 },
